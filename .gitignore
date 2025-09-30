@@ -205,3 +205,31 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+
+# dbt
+target/
+dbt_packages/
+
+# Airflow
+logs/
+airflow.db
+*.pid
+
+# Docker
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+

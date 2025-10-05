@@ -3,7 +3,7 @@ import boto3
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
-from ingestion import fetch_locations, fetch_openaq_latest, fetch_weather, save_to_s3
+from ingestion import fetch_openaq_latest, fetch_weather, save_to_s3
 
 
 STATION_FILE_KEY = "config/stations_sample.json"

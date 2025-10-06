@@ -3,6 +3,10 @@ import requests
 import random
 import json
 import boto3
+from dotenv import load_dotenv
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(project_root, ".env"))
 
 OPENAQ_API_KEY = os.getenv("OPENAQ_API_KEY")
 BUCKET = os.getenv("S3_BUCKET_NAME")

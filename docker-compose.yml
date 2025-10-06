@@ -85,7 +85,7 @@ services:
     ports:
       - "3000:3000"
 
-    spark-master:
+  spark-master:
     image: apache/spark:3.5.0
     container_name: spark-master
     environment:

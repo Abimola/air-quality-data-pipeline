@@ -1,7 +1,5 @@
 import os
 from pyspark.sql import SparkSession
-from dotenv import load_dotenv
-
 
 BUCKET = os.getenv("S3_BUCKET_NAME")
 

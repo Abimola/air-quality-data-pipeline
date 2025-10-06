@@ -107,7 +107,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
       - ./.env:/opt/spark/.env
     networks:
       - spark-net
@@ -131,7 +130,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
       - ./.env:/opt/spark/.env
     networks:
       - spark-net

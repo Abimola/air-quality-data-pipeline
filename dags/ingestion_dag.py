@@ -5,8 +5,12 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from ingestion import fetch_openaq_latest, fetch_weather, save_to_s3
 
-
+# Load secrets from environment variables
 STATION_FILE_KEY = "config/stations_sample.json"
+BUCKET = os.getenv("S3_BUCKET_NAME")
+REGION = os.getenv("AWS_DEFAULT_REGION")
+OPENAQ_API_KEY = os.getenv("OPENAQ_API_KEY")
+OWM_API_KEY = os.getenv("OWM_API_KEY")
 
 
 default_args = {

@@ -86,5 +86,41 @@ services:
       - "3000:3000"
 
 
+
+  spark-master:
+    image: bitnami/spark:3.5.1
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - "7077:7077"   # Spark master port
+      - "8081:8080"   # Spark web UI
+    volumes:
+      - ./spark_jobs:/opt/spark/jobs
+      - ./data:/opt/spark/data
+
+  spark-worker:
+    image: bitnami/spark:3.5.1
+    container_name: spark-worker
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=1
+    volumes:
+      - ./spark_jobs:/opt/spark/jobs
+      - ./data:/opt/spark/data
+
+
+
+
+
+
 volumes:
   postgres_data:

@@ -107,7 +107,7 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
+      - ./spark_jars:/opt/spark/jars1
 
 
 
@@ -132,7 +132,7 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
+      - ./spark_jars:/opt/spark/jars1
 
 
 

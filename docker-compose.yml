@@ -107,7 +107,8 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark/conf:/opt/bitnami/spark/conf
+      - ./spark_jars:/opt/spark/jars
+
 
 
 
@@ -131,7 +132,8 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark/conf:/opt/bitnami/spark/conf
+      - ./spark_jars:/opt/spark/jars
+
 
 
 

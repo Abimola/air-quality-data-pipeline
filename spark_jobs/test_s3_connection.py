@@ -1,5 +1,10 @@
+import os
 from pyspark.sql import SparkSession
+from dotenv import load_dotenv
 
+
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(project_root, ".env"))
 BUCKET = os.getenv("S3_BUCKET_NAME")
 
 spark = SparkSession.builder \

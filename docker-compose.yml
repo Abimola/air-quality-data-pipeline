@@ -105,7 +105,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
     env_file:
       - .env
 
@@ -128,7 +127,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
     env_file:
       - .env
 

@@ -10,8 +10,8 @@ spark = (
     SparkSession.builder
     .appName("S3WriteTest")
     .master("spark://spark-master:7077")
-    .config("spark.executor.memory", "400m") 
-    .config("spark.driver.memory", "400m")
+    .config("spark.executor.memory", "512m") 
+    .config("spark.driver.memory", "512m")
     .config("spark.executor.cores", "1")
     .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com")
     .config("spark.hadoop.fs.s3a.access.key", os.getenv("AWS_ACCESS_KEY_ID"))

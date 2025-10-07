@@ -99,7 +99,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars 
     restart: unless-stopped
     env_file:
       - .env
@@ -123,7 +122,6 @@ services:
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
-      - ./spark_jars:/opt/spark/jars
     restart: unless-stopped
     env_file:
       - .env

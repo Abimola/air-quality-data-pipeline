@@ -86,8 +86,10 @@ services:
       - "3000:3000"
 
   spark-master:
-    image: bitnami/spark:3.4.2
+    image: bitnami/spark:3.1.2-debian-10-r110
     container_name: spark-master
+    env_file:
+      - .env    
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -101,16 +103,16 @@ services:
       - ./spark_jobs:/opt/bitnami/spark/jobs
       - ./data:/opt/bitnami/spark/data
       - ./.env:/opt/bitnami/spark/.env
-    env_file:
-      - .env
     networks:
       - spark-net
 
   spark-worker:
-    image: bitnami/spark:3.4.2
+    image: bitnami/spark:3.1.2-debian-10-r110
     container_name: spark-worker
     depends_on:
       - spark-master
+    env_file:
+      - .env
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -120,8 +122,6 @@ services:
       - ./spark_jobs:/opt/bitnami/spark/jobs
       - ./data:/opt/bitnami/spark/data
       - ./.env:/opt/bitnami/spark/.env
-    env_file:
-      - .env
     networks:
       - spark-net
 

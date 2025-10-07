@@ -88,7 +88,7 @@ services:
   spark-master:
     image: apache/spark:3.4.3-scala2.12-java11-python3-ubuntu
     container_name: spark-master
-    mem_limit: 1g
+    mem_limit: 512m
     command: >
       bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
       --host spark-master --port 7077 --webui-port 8080"
@@ -110,7 +110,7 @@ services:
     container_name: spark-worker
     depends_on:
       - spark-master
-    mem_limit: 1g
+    mem_limit: 512m
     command: >
       bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker
       spark://spark-master:7077
@@ -119,7 +119,7 @@ services:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=1g
+      - SPARK_WORKER_MEMORY=512m
     ports:
       - "8082:8082"
     volumes:

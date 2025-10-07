@@ -86,7 +86,7 @@ services:
       - "3000:3000"
 
   spark-master:
-    image: apache/spark:3.5.1
+    image: apache/spark:4.0.0
     container_name: spark-master
     environment:
       - SPARK_MODE=master
@@ -109,7 +109,7 @@ services:
       - .env
 
   spark-worker:
-    image: apache/spark:3.5.1
+    image: apache/spark:4.0.0
     container_name: spark-worker
     depends_on:
       - spark-master

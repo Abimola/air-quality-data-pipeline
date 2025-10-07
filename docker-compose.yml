@@ -88,6 +88,7 @@ services:
   spark-master:
     image: apache/spark:4.0.0
     container_name: spark-master
+    restart: unless-stopped
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
@@ -113,6 +114,7 @@ services:
     container_name: spark-worker
     depends_on:
       - spark-master
+    restart: unless-stopped
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077

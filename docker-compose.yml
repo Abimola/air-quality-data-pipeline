@@ -122,9 +122,9 @@ services:
     command: >
       bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker
       spark://spark-master:7077
-      --webui-port 8081"
+      --webui-port 8082"
     ports:
-      - "8081:8081"
+      - "8082:8082"
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data

@@ -86,7 +86,7 @@ services:
       - "3000:3000"
 
   spark-master:
-    image: apache/spark:3.5.7-scala2.12-java11-python3-r-ubuntu
+    image: apache/spark:4.1.0-preview2-scala2.13-java21-python3-r-ubuntu
     container_name: spark-master
     restart: unless-stopped
     environment:
@@ -110,7 +110,7 @@ services:
       - .env
 
   spark-worker:
-    image: apache/spark:3.5.7-scala2.12-java11-python3-r-ubuntu
+    image: apache/spark:4.1.0-preview2-scala2.13-java21-python3-r-ubuntu
     container_name: spark-worker
     depends_on:
       - spark-master

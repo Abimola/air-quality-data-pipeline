@@ -86,51 +86,48 @@ services:
       - "3000:3000"
 
   spark-master:
-    image: apache/spark:4.1.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.4.3-scala2.12-java11-python3-ubuntu
     container_name: spark-master
-    restart: unless-stopped
-    environment:
-      - SPARK_MODE=master
-      - SPARK_RPC_AUTHENTICATION_ENABLED=no
-      - SPARK_RPC_ENCRYPTION_ENABLED=no
-      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
-      - SPARK_SSL_ENABLED=no
-    ports:
-      - "8081:8080"   
-      - "7077:7077"  
     command: >
       bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
-      --host spark-master
-      --port 7077
-      --webui-port 8080"
+      --host spark-master --port 7077 --webui-port 8080"
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "8081:8080"
+      - "7077:7077"
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
+      - ./spark_jars:/opt/spark/jars 
+    restart: unless-stopped
     env_file:
       - .env
 
   spark-worker:
-    image: apache/spark:4.1.0-preview2-scala2.13-java21-python3-r-ubuntu
+    image: apache/spark:3.4.3-scala2.12-java11-python3-ubuntu
     container_name: spark-worker
     depends_on:
       - spark-master
-    restart: unless-stopped
+    command: >
+      bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker
+      spark://spark-master:7077
+      --webui-port 8082"
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=2G
-    command: >
-      bash -c "/opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker
-      spark://spark-master:7077
-      --webui-port 8082"
     ports:
       - "8082:8082"
     volumes:
       - ./spark_jobs:/opt/spark/jobs
       - ./data:/opt/spark/data
+      - ./spark_jars:/opt/spark/jars
+    restart: unless-stopped
     env_file:
       - .env
+
 
 
   

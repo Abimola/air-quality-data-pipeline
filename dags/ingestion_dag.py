@@ -5,6 +5,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from ingestion import fetch_openaq_latest, fetch_weather, save_to_s3
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 # Load secrets from environment variables
 STATION_FILE_KEY = "config/stations_sample.json"
@@ -64,3 +65,13 @@ with DAG(
         task_id="fetch_and_save_data",
         python_callable=run_ingestion,
     )
+
+# Trigger transformation DAG after ingestion completes
+trigger_transform = TriggerDagRunOperator(
+    task_id="trigger_transform_dag",
+    trigger_dag_id="transform_air_quality_data",
+    conf={"run_hour": "{{ ts_nodash }}"},
+    wait_for_completion=False,  
+)
+
+ingest_task >> trigger_transform

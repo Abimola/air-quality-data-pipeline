@@ -13,7 +13,8 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Sync Spark jobs to S3
-      uses: aws-actions/s3-sync@v2
+      uses: jakejarvis/s3-sync-action@v0.5.1
+
       with:
         args: --delete
       env:

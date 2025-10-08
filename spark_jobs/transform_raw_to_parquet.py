@@ -112,7 +112,7 @@ try:
         col("current.wind_speed").alias("wind_speed"),
         col("current.wind_deg").alias("wind_deg"),
         col("current.wind_gust").alias("wind_gust"),
-        col("current.dt").alias("weather_timestamp")
+        col("current.dt").alias("weather_timestamp"),
         regexp_extract(input_file_name(), r"(\d+)\.json$", 1).alias("station_id")
     )
 

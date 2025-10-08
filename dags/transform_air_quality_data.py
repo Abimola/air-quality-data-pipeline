@@ -17,7 +17,7 @@ import boto3
 
 
 # -------------------------------------------------------------------------
-# 🔐 Retrieve secure configuration from AWS Systems Manager Parameter Store
+# Retrieve secure configuration from AWS Systems Manager Parameter Store
 # -------------------------------------------------------------------------
 ssm = boto3.client("ssm", region_name="eu-north-1")
 
@@ -45,7 +45,7 @@ def start_emr_job(**kwargs):
             "sparkSubmit": {
                 "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_air_quality.py",
                 "sparkSubmitParameters": (
-                    f"--conf spark.run_hour={run_hour}" if run_hour else ""
+                    f"--conf spark.run_hour={run_hour}" if run_hour
                 ),
             }
         },

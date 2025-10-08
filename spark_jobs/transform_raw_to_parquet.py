@@ -4,7 +4,7 @@ into a unified, structured Parquet dataset.
 """
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode, regexp_extract, lit, from_unixtime, year, month
+from pyspark.sql.functions import col, explode, regexp_extract, input_file_name, lit, from_unixtime, year, month
 from datetime import datetime
 import boto3
 
@@ -113,8 +113,7 @@ try:
         col("current.wind_deg").alias("wind_deg"),
         col("current.wind_gust").alias("wind_gust"),
         col("current.dt").alias("weather_timestamp")
-    ).withColumn(
-        "station_id", regexp_extract(col("input_file_name()"), r"(\d+)\.json$", 1)
+        regexp_extract(input_file_name(), r"(\d+)\.json$", 1).alias("station_id")
     )
 
     print("✅ Weather data successfully flattened and station_id extracted from filenames.")

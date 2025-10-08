@@ -51,10 +51,20 @@ STAGING_PATH = f"s3://{bucket}/staging/air_quality/"
 
 # 4. Read raw JSON data from S3 (filtered by hour if provided)
 print("Reading OpenAQ data from S3...")
-aq_df = spark.read.option("multiLine", True).json(RAW_OPENAQ)
+aq_df = (
+    spark.read
+    .option("multiLine", True)
+    .option("recursiveFileLookup", "true") 
+    .json(RAW_OPENAQ)
+)
 
 print("Reading Weather data from S3...")
-wx_df = spark.read.option("multiLine", True).json(RAW_WEATHER)
+wx_df = (
+    spark.read
+    .option("multiLine", True)
+    .option("recursiveFileLookup", "true") 
+    .json(RAW_WEATHER)
+)
 
 print("Reading Stations metadata from S3...")
 stations_df = spark.read.option("multiLine", True).json(STATIONS_PATH)

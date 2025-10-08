@@ -16,26 +16,27 @@ from datetime import datetime
 import boto3
 
 
-# Retrieve secure configuration from AWS SSM Parameter Store
+# -------------------------------------------------------------------------
+# 🔐 Retrieve secure configuration from AWS Systems Manager Parameter Store
+# -------------------------------------------------------------------------
 ssm = boto3.client("ssm", region_name="eu-north-1")
+
 app_id = ssm.get_parameter(Name="/airquality/config/emr-app-id")["Parameter"]["Value"]
 role_arn = ssm.get_parameter(Name="/airquality/config/emr-role-arn")["Parameter"]["Value"]
 bucket = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")["Parameter"]["Value"]
 
-
-# 
+# -------------------------------------------------------------------------
 # DAG CONFIGURATION
-# 
+# -------------------------------------------------------------------------
 # This DAG has no schedule — it runs only when triggered by api_ingestion.
 # It starts an EMR Serverless Spark job and writes logs + output to S3.
-# 
+# -------------------------------------------------------------------------
 
 def start_emr_job(**kwargs):
-    """Function to dynamically get run_hour and trigger EMR job"""
+    """Dynamically retrieves runtime parameters and triggers EMR Serverless Spark job."""
     context = get_current_context()
     run_hour = context["dag_run"].conf.get("run_hour", None)
 
-    # Create and execute EMR Serverless job
     emr_task = EmrServerlessStartJobOperator(
         task_id="run_emr_transform",
         application_id=app_id,
@@ -43,7 +44,9 @@ def start_emr_job(**kwargs):
         job_driver={
             "sparkSubmit": {
                 "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_air_quality.py",
-                "sparkSubmitParameters": f"--conf spark.run_hour={run_hour}"
+                "sparkSubmitParameters": (
+                    f"--conf spark.run_hour={run_hour}" if run_hour else ""
+                ),
             }
         },
         configuration_overrides={
@@ -54,12 +57,15 @@ def start_emr_job(**kwargs):
             }
         },
         aws_conn_id="aws_default",
-       
     )
 
+    # Trigger EMR job directly
     return emr_task.execute(context=context)
 
 
+# -------------------------------------------------------------------------
+# DAG DEFINITION
+# -------------------------------------------------------------------------
 with DAG(
     dag_id="transform_air_quality_data",
     description="Run EMR Serverless Spark job for air quality data transformation",
@@ -69,9 +75,7 @@ with DAG(
     tags=["emr", "spark", "airquality"],
 ) as dag:
 
-    # Python task wrapper to trigger EMR Serverless job
     emr_transform_task = PythonOperator(
         task_id="trigger_emr_transform",
         python_callable=start_emr_job,
-        provide_context=True,
     )

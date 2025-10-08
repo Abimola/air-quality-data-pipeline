@@ -37,18 +37,21 @@ def start_emr_job(**kwargs):
     context = get_current_context()
     run_hour = context["dag_run"].conf.get("run_hour", None)
 
+    # Build the job driver dynamically
+    job_driver = {
+        "sparkSubmit": {
+            "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_air_quality.py",
+        }
+    }
+
+    if run_hour:
+        job_driver["sparkSubmit"]["sparkSubmitParameters"] = f"--conf spark.run_hour={run_hour}"
+
     emr_task = EmrServerlessStartJobOperator(
         task_id="run_emr_transform",
         application_id=app_id,
         execution_role_arn=role_arn,
-        job_driver={
-            "sparkSubmit": {
-                "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_air_quality.py",
-                "sparkSubmitParameters": (
-                    f"--conf spark.run_hour={run_hour}" if run_hour
-                ),
-            }
-        },
+        job_driver=job_driver,
         configuration_overrides={
             "monitoringConfiguration": {
                 "s3MonitoringConfiguration": {

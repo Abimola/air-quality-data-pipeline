@@ -54,7 +54,7 @@ def start_emr_job(**kwargs):
             }
         },
         aws_conn_id="aws_default",
-        region_name="eu-north-1",
+       
     )
 
     return emr_task.execute(context=context)

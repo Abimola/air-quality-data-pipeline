@@ -40,7 +40,7 @@ def start_emr_job(**kwargs):
     # Build the job driver dynamically
     job_driver = {
         "sparkSubmit": {
-            "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_air_quality.py",
+            "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_raw_to_parquet.py",
         }
     }
 

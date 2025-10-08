@@ -136,8 +136,9 @@ except Exception as e:
 
 
 # 8. Derive year and month from weather_timestamp for partitioning
-final_df = final_df.withColumn("year", year(from_unixtime("weather_timestamp"))) \
-                   .withColumn("month", month(from_unixtime("weather_timestamp")))
+# 8. Derive year and month from weather_timestamp for partitioning
+final_df = final_df.withColumn("year", year(from_unixtime(col("weather_timestamp")))) \
+                   .withColumn("month", month(from_unixtime(col("weather_timestamp"))))
 
 
 # 9. Write unified dataset to S3 as Parquet (partitioned)

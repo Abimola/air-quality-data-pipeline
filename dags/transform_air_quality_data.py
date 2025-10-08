@@ -51,6 +51,7 @@ def start_emr_job(**kwargs):
         task_id="run_emr_transform",
         application_id=app_id,
         execution_role_arn=role_arn,
+        name=f"airquality_transform_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
         job_driver=job_driver,
         configuration_overrides={
             "monitoringConfiguration": {

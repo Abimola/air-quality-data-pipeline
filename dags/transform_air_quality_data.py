@@ -73,7 +73,7 @@ def start_emr_job(**kwargs):
 with DAG(
     dag_id="transform_air_quality_data",
     description="Run EMR Serverless Spark job for air quality data transformation",
-    schedule_interval=None,   # Triggered by ingestion DAG
+    schedule_interval=None, 
     start_date=datetime(2025, 10, 1),
     catchup=False,
     tags=["emr", "spark", "airquality"],

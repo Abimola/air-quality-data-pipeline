@@ -37,15 +37,30 @@ def start_emr_job(**kwargs):
     context = get_current_context()
     run_hour = context["dag_run"].conf.get("run_hour", None)
 
-    # Build the job driver dynamically
+    # Build the job driver
     job_driver = {
         "sparkSubmit": {
             "entryPoint": f"s3://{bucket}/code/spark_jobs/transform_raw_to_parquet.py",
         }
     }
 
+    
+    # Add Spark runtime and resource configuration
+    base_params = (
+        "--conf spark.executor.memory=2g "
+        "--conf spark.executor.cores=1 "
+        "--conf spark.driver.memory=2g "
+        "--conf spark.executor.instances=2"
+    )
+
+    # Include run_hour if passed from the triggering DAG
     if run_hour:
-        job_driver["sparkSubmit"]["sparkSubmitParameters"] = f"--conf spark.run_hour={run_hour}"
+        job_driver["sparkSubmit"]["sparkSubmitParameters"] = (
+            f"--conf spark.run_hour={run_hour} " + base_params
+        )
+    else:
+        job_driver["sparkSubmit"]["sparkSubmitParameters"] = base_params
+
 
     emr_task = EmrServerlessStartJobOperator(
         task_id="run_emr_transform",

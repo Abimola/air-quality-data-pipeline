@@ -71,7 +71,7 @@ with DAG(
 trigger_transform = TriggerDagRunOperator(
     task_id="trigger_transform_dag",
     trigger_dag_id="transform_air_quality_data",
-    conf={"run_hour": "{{ macros.timezone.utcnow().strftime('%Y%m%dT%H%M%S') }}"},
+    conf={"run_hour": "{{ macros.datetime.utcnow().strftime('%Y%m%dT%H%M%S') }}"},
     wait_for_completion=False,  
 )
 

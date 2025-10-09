@@ -60,9 +60,8 @@ def load_staging_to_postgres(**context):
 
     # Ensure schema exists before loading
     engine = create_engine(PG_CONN_STR)
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {TARGET_SCHEMA};"))
-        conn.commit()
         print(f"✅ Ensured schema '{TARGET_SCHEMA}' exists in Postgres.")
 
     # Load data into Postgres

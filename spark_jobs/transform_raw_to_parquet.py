@@ -127,7 +127,6 @@ except Exception as e:
 try:
     final_df = (
         openaq_enriched.join(wx_flat, on="station_id", how="left")
-        .withColumn("source", lit("OpenAQ+OWM"))
     )
     print("✅ Successfully joined OpenAQ and Weather data.")
 except Exception as e:
@@ -145,7 +144,7 @@ final_df = (
 )
 
 
-# 8b. Enforce consistent column data types for Parquet schema
+# 9 Enforce consistent column data types for Parquet schema
 try:
     print("Enforcing consistent data types before writing to Parquet...")
 
@@ -196,7 +195,7 @@ except Exception as e:
     print(f"⚠️ Failed to standardize data types: {e}")
 
 
-# 9. Write unified dataset to S3 as Parquet (partitioned)
+# 10. Write unified dataset to S3 as Parquet (partitioned)
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")
     spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic") 

@@ -12,6 +12,8 @@ import awswrangler as wr
 import pandas as pd
 from sqlalchemy import create_engine, text
 import boto3
+import pg8000
+
 
 # -------------------------------------------------------------------------
 # Configuration

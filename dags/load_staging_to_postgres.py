@@ -96,3 +96,6 @@ with DAG(
         python_callable=load_staging_to_postgres,
         provide_context=True,
     )
+
+
+    

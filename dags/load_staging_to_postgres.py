@@ -10,10 +10,10 @@ from airflow.operators.python import PythonOperator, get_current_context
 from datetime import datetime, timedelta
 import awswrangler as wr
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 import boto3
 import pg8000
-
+import os
 
 # -------------------------------------------------------------------------
 # Configuration
@@ -21,7 +21,13 @@ import pg8000
 ssm = boto3.client("ssm", region_name="eu-north-1")
 bucket = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")["Parameter"]["Value"]
 
-PG_CONN_STR = "postgresql+psycopg2://airflow:airflow@postgres:5432/airflow"
+# Load database credentials securely from environment variables
+PG_HOST = "postgres"
+PG_PORT = 5432
+PG_DB = os.getenv("POSTGRES_DB")
+PG_USER = os.getenv("POSTGRES_USER")
+PG_PASS = os.getenv("POSTGRES_PASSWORD")
+
 TARGET_SCHEMA = "airquality_dwh"
 TARGET_TABLE = "stg_air_quality"
 
@@ -60,21 +66,22 @@ def load_staging_to_postgres(**context):
     if "weather_timestamp" in df.columns:
         df["weather_timestamp"] = pd.to_datetime(df["weather_timestamp"], unit="s", errors="coerce")
 
-    # ✅ Create schema if not exists (using pg8000 directly)
+    # Connect securely using pg8000
     conn = pg8000.connect(
-        user="airflow",
-        password="airflow",
-        host="postgres",
-        port=5432,
-        database="airflow"
+        user=PG_USER,
+        password=PG_PASS,
+        host=PG_HOST,
+        port=PG_PORT,
+        database=PG_DB
     )
 
+    # Ensure schema exists before loading
     with conn.cursor() as cur:
         cur.execute(f"CREATE SCHEMA IF NOT EXISTS {TARGET_SCHEMA};")
         conn.commit()
         print(f"✅ Ensured schema '{TARGET_SCHEMA}' exists in Postgres.")
 
-    # ✅ Load into Postgres using Wrangler (works perfectly with pg8000)
+    # Load data into Postgres
     wr.postgresql.to_sql(
         df=df,
         con=conn,
@@ -86,6 +93,7 @@ def load_staging_to_postgres(**context):
 
     conn.close()
     print(f"✅ Loaded {len(df)} rows into {TARGET_SCHEMA}.{TARGET_TABLE}")
+
 
 # -------------------------------------------------------------------------
 # DAG definition
@@ -105,5 +113,3 @@ with DAG(
         python_callable=load_staging_to_postgres,
         provide_context=True,
     )
-
-

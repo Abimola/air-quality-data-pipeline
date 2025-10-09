@@ -62,7 +62,7 @@ def start_emr_job(**kwargs):
             }
         },
         aws_conn_id="aws_default",
-        job_runtime_in_seconds=300, 
+        
     )
 
     # Trigger EMR job directly

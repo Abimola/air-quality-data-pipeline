@@ -70,7 +70,7 @@ with DAG(
 trigger_transform = TriggerDagRunOperator(
     task_id="trigger_transform_dag",
     trigger_dag_id="transform_air_quality_data",
-    conf={"run_hour": "{{ ts_nodash }}"},
+    conf={"run_hour": "{{ ts_now_nodash }}"},
     wait_for_completion=False,  
 )
 

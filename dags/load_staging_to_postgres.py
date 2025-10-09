@@ -51,7 +51,7 @@ def load_staging_to_postgres(**context):
         y, m, d, h = dt.strftime("%Y"), dt.strftime("%m"), dt.strftime("%d"), dt.strftime("%H")
         s3_path = f"{STAGING_PATH}year={y}/month={m}/day={d}/hour={h}/"
         print(f"Loading specific partition: {s3_path}")
-        df = wr.s3.read_parquet(path=s3_path)
+        df = wr.s3.read_parquet(path=s3_path, dataset=True)
     else:
         print(f"Loading all staging data from {STAGING_PATH}")
         df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)

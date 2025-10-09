@@ -72,10 +72,8 @@ def start_emr_job(**kwargs):
             "monitoringConfiguration": {
                 "s3MonitoringConfiguration": {
                     "logUri": f"s3://{bucket}/logs/emr-serverless/"
-                },
-                "jobTimeout": {                     
-                    "maxRuntimeInSeconds": 300       
                 }
+                
             }
         },
         aws_conn_id="aws_default",

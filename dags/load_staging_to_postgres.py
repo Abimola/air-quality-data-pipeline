@@ -47,39 +47,19 @@ def load_staging_to_postgres(**context):
     run_hour = context["dag_run"].conf.get("run_hour", None)
 
     if run_hour:
-        # Parse the run hour from Airflow config
         dt = datetime.strptime(run_hour, "%Y%m%dT%H%M%S")
         y, m, d, h = dt.strftime("%Y"), dt.strftime("%m"), dt.strftime("%d"), dt.strftime("%H")
-
-        print(f"Loading partition year={y}, month={m}, day={d}, hour={h} from {STAGING_PATH} ...")
-
-        # Efficiently read only the matching partition
-        df = wr.s3.read_parquet(
-            path=STAGING_PATH,
-            dataset=True,
-            filters=[
-                ("year", "==", int(y)),
-                ("month", "==", int(m)),
-                ("day", "==", int(d)),
-                ("hour", "==", int(h))
-            ]
-        )
-    # else:
-    #     print(f"Loading all staging data from {STAGING_PATH}")
-    #     df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
-
+        s3_path = f"{STAGING_PATH}station_id=*/year={y}/month={m}/day={d}/hour={h}/"
+        print(f"Loading specific partition: {s3_path}")
+        df = wr.s3.read_parquet(path=s3_path, dataset=False)
     else:
-        print(f"Loading all staging data from {STAGING_PATH}")
-        df = wr.s3.read_parquet(
-            path=STAGING_PATH,
-            dataset=True,
-            filters=[
-                ("year", "==", 2025),
-                ("month", "==", 10),
-                ("day", "==", 9),
-                ("hour", "==", 21)
-            ]
-        )
+        # print(f"Loading all staging data from {STAGING_PATH}")
+        # df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
+        s3_path = f"{STAGING_PATH}station_id=*/year={2025}/month={10}/day={9}/hour={20}/"
+        print(f"Loading specific partition: {s3_path}")
+        df = wr.s3.read_parquet(path=s3_path, dataset=False)
+
+
 
 
     if df.empty:

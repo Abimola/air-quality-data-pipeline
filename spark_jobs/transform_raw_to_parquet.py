@@ -145,6 +145,57 @@ final_df = (
 )
 
 
+# 8b. Enforce consistent column data types for Parquet schema
+try:
+    print("Enforcing consistent data types before writing to Parquet...")
+
+    type_mapping = {
+        "station_id": "string",
+        "sensor_id": "string",
+        "value": "double",
+        "measurement_time": "string",
+        "latitude": "double",
+        "longitude": "double",
+        "parameter_name": "string",
+        "units": "string",
+        "display_name": "string",
+        "station_name": "string",
+        "temperature": "double",
+        "feels_like": "double",
+        "humidity": "double",
+        "pressure": "double",
+        "dew_point": "double",
+        "uvi": "double",
+        "clouds": "double",
+        "visibility": "double",
+        "wind_speed": "double",
+        "wind_deg": "double",
+        "wind_gust": "double"
+    }
+
+    # Keep track of missing columns
+    existing_columns = set(final_df.columns)
+    missing_columns = [col for col in type_mapping.keys() if col not in existing_columns]
+
+    # Apply type casting safely for existing columns
+    for column, dtype in type_mapping.items():
+        if column in existing_columns:
+            final_df = final_df.withColumn(column, col(column).cast(dtype))
+
+    print("✅ All column data types standardized successfully.")
+
+    # Log any skipped columns
+    if missing_columns:
+        print(f"✅ Skipped missing columns (not found in DataFrame): {', '.join(missing_columns)}")
+
+    # Optional: Verify final schema
+    print("\n Final DataFrame Schema:")
+    final_df.printSchema()
+
+except Exception as e:
+    print(f"⚠️ Failed to standardize data types: {e}")
+
+
 # 9. Write unified dataset to S3 as Parquet (partitioned)
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")

@@ -58,24 +58,32 @@ def load_staging_to_postgres(**context):
     if "weather_timestamp" in df.columns:
         df["weather_timestamp"] = pd.to_datetime(df["weather_timestamp"], unit="s", errors="coerce")
 
-    # Ensure schema exists before loading
-    engine = create_engine(PG_CONN_STR)
-    with engine.begin() as conn:
-        conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {TARGET_SCHEMA};"))
+    # ✅ Create schema if not exists (using pg8000 directly)
+    conn = pg8000.connect(
+        user="airflow",
+        password="airflow",
+        host="postgres",
+        port=5432,
+        database="airflow"
+    )
+
+    with conn.cursor() as cur:
+        cur.execute(f"CREATE SCHEMA IF NOT EXISTS {TARGET_SCHEMA};")
+        conn.commit()
         print(f"✅ Ensured schema '{TARGET_SCHEMA}' exists in Postgres.")
 
-    # Load data into Postgres
+    # ✅ Load into Postgres using Wrangler (works perfectly with pg8000)
     wr.postgresql.to_sql(
         df=df,
-        con=engine,
+        con=conn,
         schema=TARGET_SCHEMA,
         table=TARGET_TABLE,
-        mode="append",   
+        mode="append",
         index=False
     )
 
+    conn.close()
     print(f"✅ Loaded {len(df)} rows into {TARGET_SCHEMA}.{TARGET_TABLE}")
-
 
 # -------------------------------------------------------------------------
 # DAG definition

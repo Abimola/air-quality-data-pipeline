@@ -44,9 +44,23 @@ def start_emr_job(**kwargs):
         }
     }
 
+    
+    # Add Spark runtime and resource configuration
+    base_params = (
+        "--conf spark.executor.memory=2g "
+        "--conf spark.executor.cores=1 "
+        "--conf spark.driver.memory=2g "
+        "--conf spark.executor.instances=2"
+    )
+
     # Include run_hour if passed from the triggering DAG
     if run_hour:
-        job_driver["sparkSubmit"]["sparkSubmitParameters"] = f"--conf spark.run_hour={run_hour}"
+        job_driver["sparkSubmit"]["sparkSubmitParameters"] = (
+            f"--conf spark.run_hour={run_hour} " + base_params
+        )
+    else:
+        job_driver["sparkSubmit"]["sparkSubmitParameters"] = base_params
+
 
     emr_task = EmrServerlessStartJobOperator(
         task_id="run_emr_transform",
@@ -77,7 +91,7 @@ def start_emr_job(**kwargs):
 with DAG(
     dag_id="transform_air_quality_data",
     description="Run EMR Serverless Spark job for air quality data transformation",
-    schedule_interval=None,
+    schedule_interval=None, 
     start_date=datetime(2025, 10, 1),
     catchup=False,
     tags=["emr", "spark", "airquality"],

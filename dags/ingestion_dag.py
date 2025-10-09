@@ -6,6 +6,7 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from ingestion import fetch_openaq_latest, fetch_weather, save_to_s3
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.utils import timezone
 
 # Load secrets from environment variables
 STATION_FILE_KEY = "config/stations_sample.json"
@@ -70,7 +71,7 @@ with DAG(
 trigger_transform = TriggerDagRunOperator(
     task_id="trigger_transform_dag",
     trigger_dag_id="transform_air_quality_data",
-    conf={"run_hour": "{{ ts_now_nodash }}"},
+    conf={"run_hour": "{{ macros.timezone.utcnow().strftime('%Y%m%dT%H%M%S') }}"}
     wait_for_completion=False,  
 )
 

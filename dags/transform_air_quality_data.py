@@ -12,6 +12,7 @@ Description:
 from airflow import DAG
 from airflow.providers.amazon.aws.operators.emr import EmrServerlessStartJobOperator
 from airflow.operators.python import PythonOperator, get_current_context
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime
 import boto3
 
@@ -99,3 +100,13 @@ with DAG(
         task_id="trigger_emr_transform",
         python_callable=start_emr_job,
     )
+
+    # Trigger Postgres load after successful EMR transformation
+    trigger_postgres_load = TriggerDagRunOperator(
+        task_id="trigger_postgres_load",
+        trigger_dag_id="load_staging_to_postgres",  
+        conf={"run_hour": "{{ dag_run.conf.get('run_hour') }}"},  # pass same hour downstream
+        wait_for_completion=False,
+    )
+
+    emr_transform_task >> trigger_postgres_load

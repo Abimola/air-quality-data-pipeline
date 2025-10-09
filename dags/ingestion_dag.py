@@ -67,12 +67,12 @@ with DAG(
         python_callable=run_ingestion,
     )
 
-# Trigger transformation DAG after ingestion completes
-trigger_transform = TriggerDagRunOperator(
-    task_id="trigger_transform_dag",
-    trigger_dag_id="transform_air_quality_data",
-    conf={"run_hour": "{{ macros.datetime.utcnow().strftime('%Y%m%dT%H%M%S') }}"},
-    wait_for_completion=False,  
-)
+    # Trigger transformation DAG after ingestion completes
+    trigger_transform = TriggerDagRunOperator(
+        task_id="trigger_transform_dag",
+        trigger_dag_id="transform_air_quality_data",
+        conf={"run_hour": "{{ macros.datetime.utcnow().strftime('%Y%m%dT%H%M%S') }}"},
+        wait_for_completion=False,  
+    )
 
-ingest_task >> trigger_transform
+    ingest_task >> trigger_transform

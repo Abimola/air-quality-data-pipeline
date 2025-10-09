@@ -4,7 +4,7 @@ into a unified, structured Parquet dataset.
 """
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode, regexp_extract, input_file_name, lit, from_unixtime, year, month
+from pyspark.sql.functions import col, explode, regexp_extract, input_file_name, lit, from_unixtime, year, month, dayofmonth, hour
 from datetime import datetime
 import boto3
 
@@ -54,7 +54,7 @@ print("Reading OpenAQ data from S3...")
 aq_df = (
     spark.read
     .option("multiLine", True)
-    .option("recursiveFileLookup", "true") 
+    .option("recursiveFileLookup", "true")
     .json(RAW_OPENAQ)
 )
 
@@ -62,7 +62,7 @@ print("Reading Weather data from S3...")
 wx_df = (
     spark.read
     .option("multiLine", True)
-    .option("recursiveFileLookup", "true") 
+    .option("recursiveFileLookup", "true")
     .json(RAW_WEATHER)
 )
 
@@ -135,16 +135,22 @@ except Exception as e:
     final_df = openaq_enriched
 
 
-# 8. Derive year and month from weather_timestamp for partitioning
-# 8. Derive year and month from weather_timestamp for partitioning
-final_df = final_df.withColumn("year", year(from_unixtime(col("weather_timestamp")))) \
-                   .withColumn("month", month(from_unixtime(col("weather_timestamp"))))
+# 8. Derive year, month, day, hour from weather_timestamp for partitioning
+final_df = (
+    final_df
+    .withColumn("year", year(from_unixtime(col("weather_timestamp"))))
+    .withColumn("month", month(from_unixtime(col("weather_timestamp"))))
+    .withColumn("day", dayofmonth(from_unixtime(col("weather_timestamp"))))
+    .withColumn("hour", hour(from_unixtime(col("weather_timestamp"))))
+)
 
 
 # 9. Write unified dataset to S3 as Parquet (partitioned)
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")
-    final_df.write.mode("overwrite").partitionBy("station_id", "year", "month").parquet(STAGING_PATH)
+    spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic") 
+    final_df.write.mode("overwrite").partitionBy("station_id", "year", "month", "day", "hour").parquet(STAGING_PATH)
+
     print("✅ Transformation complete — data successfully written to S3.")
 except Exception as e:
     print(f"⚠️ Failed to write Parquet output: {e}")

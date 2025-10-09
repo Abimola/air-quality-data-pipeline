@@ -38,19 +38,47 @@ def load_staging_to_postgres(**context):
     context = get_current_context()
     run_hour = context["dag_run"].conf.get("run_hour", None)
 
+    # Define expected column data types for schema consistency
+    dtype = {
+        "station_id": "string",
+        "sensor_id": "string",
+        "value": "double",
+        "measurement_time": "string",
+        "latitude": "double",
+        "longitude": "double",
+        "parameter_name": "string",
+        "units": "string",
+        "display_name": "string",
+        "station_name": "string",
+        "temperature": "double",
+        "feels_like": "double",
+        "humidity": "double",
+        "pressure": "double",
+        "dew_point": "double",
+        "uvi": "double",
+        "clouds": "double",
+        "visibility": "double",
+        "wind_speed": "double",
+        "wind_deg": "double",
+        "wind_gust": "double",
+    }
+
+    # Read parquet data — hourly partition if run_hour provided, else full dataset
     if run_hour:
         dt = datetime.strptime(run_hour, "%Y%m%dT%H%M%S")
         y, m, d, h = dt.strftime("%Y"), dt.strftime("%m"), dt.strftime("%d"), dt.strftime("%H")
         s3_path = f"{STAGING_PATH}year={y}/month={m}/day={d}/hour={h}/"
         print(f"Loading specific partition: {s3_path}")
-        df = wr.s3.read_parquet(path=s3_path)
+        df = wr.s3.read_parquet(path=s3_path, dtype=dtype)
     else:
         print(f"Loading all staging data from {STAGING_PATH}")
-        df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
+        df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True, dtype=dtype)
 
+    # Exit early if no data was found
     if df.empty:
         print("⚠️ No data found — nothing to load.")
         return
+
 
     # Convert timestamp columns
     if "measurement_time" in df.columns:
@@ -98,4 +126,3 @@ with DAG(
     )
 
 
-    

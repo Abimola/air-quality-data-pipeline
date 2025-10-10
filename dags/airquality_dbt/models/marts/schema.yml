@@ -32,6 +32,6 @@ models:
           - relationships:
               to: ref('dim_sensor')
               field: sensor_id
-      - name: measurement_time
+      - name: parameter_measurement_time
         tests:
           - not_null

@@ -9,8 +9,9 @@ select
         when measurement_time < weather_timestamp - interval '1 day' then 'inactive'
         else 'active'
     end as sensor_status,
-    latitude::double precision as latitude,
-    longitude::double precision as longitude,
+    -- Latitude and longitude rounded to 4 decimal places
+    round(latitude::double precision, 4) as latitude,
+    round(longitude::double precision, 4) as longitude,
     station_name,
     parameter_name,
     units,

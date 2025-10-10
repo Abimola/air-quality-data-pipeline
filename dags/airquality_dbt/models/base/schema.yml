@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: airquality_dwh
+    description: "Postgres schema containing the staging table loaded from S3"
+    database: airflow
+    schema: airquality_dwh
+    tables:
+      - name: stg_air_quality
+        description: "Staging air quality data transformed by EMR and loaded into Postgres"

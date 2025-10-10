@@ -5,6 +5,10 @@ select
     sensor_id,
     value::double precision as parameter_value,
     measurement_time::timestamp as parameter_measurement_time,
+    case
+        when measurement_time < weather_timestamp - interval '1 day' then 'inactive'
+        else 'active'
+    end as sensor_status,
     latitude::double precision as latitude,
     longitude::double precision as longitude,
     station_name,
@@ -22,6 +26,7 @@ select
     wind_speed::double precision as wind_speed,
     wind_deg::double precision as wind_deg,
     wind_gust::double precision as wind_gust,
+    weather_timestamp::timestamp as weather_timestamp,
     year::int as year,
     month::int as month,
     day::int as day,

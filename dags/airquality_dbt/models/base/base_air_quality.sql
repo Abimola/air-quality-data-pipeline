@@ -10,8 +10,8 @@ select
         else 'active'
     end as sensor_status,
     -- Latitude and longitude rounded to 4 decimal places
-    round(latitude::double precision, 4) as latitude,
-    round(longitude::double precision, 4) as longitude,
+    cast(round(latitude::numeric, 4) as double precision) as latitude,
+    cast(round(longitude::numeric, 4) as double precision) as longitude,
     station_name,
     parameter_name,
     units,

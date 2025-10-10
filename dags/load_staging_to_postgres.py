@@ -49,18 +49,12 @@ def load_staging_to_postgres(**context):
     if run_hour:
         dt = datetime.strptime(run_hour, "%Y%m%dT%H%M%S")
         y, m, d, h = dt.strftime("%Y"), dt.strftime("%m"), dt.strftime("%d"), dt.strftime("%H")
-        s3_path = f"{STAGING_PATH}station_id=*/year={y}/month={m}/day={d}/hour={h}/"
+        s3_path = f"{STAGING_PATH}year={y}/month={m}/day={d}/hour={h}/"
         print(f"Loading specific partition: {s3_path}")
-        df = wr.s3.read_parquet(path=s3_path, dataset=False)
+        df = wr.s3.read_parquet(path=s3_path)
     else:
-        # print(f"Loading all staging data from {STAGING_PATH}")
-        # df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
-        s3_path = f"{STAGING_PATH}station_id=*/year={2025}/month={10}/day={9}/hour={20}/"
-        print(f"Loading specific partition: {s3_path}")
-        df = wr.s3.read_parquet(path=s3_path, dataset=False)
-
-
-
+        print(f"Loading all staging data from {STAGING_PATH}")
+        df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
 
     if df.empty:
         print("⚠️ No data found — nothing to load.")

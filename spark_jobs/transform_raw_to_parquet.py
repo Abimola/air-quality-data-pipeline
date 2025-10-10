@@ -4,7 +4,7 @@ into a unified, structured Parquet dataset.
 """
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, explode, regexp_extract, input_file_name, lit, from_unixtime, year, month, dayofmonth, hour
+from pyspark.sql.functions import col, explode, regexp_extract, input_file_name
 from datetime import datetime
 import boto3
 
@@ -78,7 +78,11 @@ try:
         col("results.value").alias("value"),
         col("results.datetime.utc").alias("measurement_time"),
         col("results.coordinates.latitude").alias("latitude"),
-        col("results.coordinates.longitude").alias("longitude")
+        col("results.coordinates.longitude").alias("longitude"),
+        regexp_extract(input_file_name(), r"/openaq/(\d{4})/", 1).alias("ingestion_year"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/(\d{2})/", 1).alias("ingestion_month"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/(\d{2})/", 1).alias("ingestion_day"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("ingestion_hour")
     )
 
     sensors_flat = stations_df.withColumn("sensors", explode("sensors")).select(
@@ -92,14 +96,14 @@ try:
 
     openaq_enriched = aq_flat.join(sensors_flat, on=["station_id", "sensor_id"], how="left")
 
-    print("✅ OpenAQ successfully flattened and enriched with sensor metadata.")
+    print("✅ OpenAQ successfully flattened and enriched with sensor metadata and ingestion info.")
 
 except Exception as e:
     print(f"⚠️ OpenAQ flattening or enrichment failed: {e}")
     openaq_enriched = aq_df
 
 
-# 6. Flatten Weather data and extract station_id from file names
+# 6. Flatten Weather data and extract station_id + ingestion info
 try:
     wx_flat = wx_df.select(
         col("current.temp").alias("temperature"),
@@ -113,38 +117,46 @@ try:
         col("current.wind_deg").alias("wind_deg"),
         col("current.wind_gust").alias("wind_gust"),
         col("current.dt").alias("weather_timestamp"),
-        regexp_extract(input_file_name(), r"(\d+)\.json$", 1).alias("station_id")
+        regexp_extract(input_file_name(), r"(\d+)\.json$", 1).alias("station_id"),
+        regexp_extract(input_file_name(), r"/weather/(\d{4})/", 1).alias("ingestion_year"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/(\d{2})/", 1).alias("ingestion_month"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/(\d{2})/", 1).alias("ingestion_day"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("ingestion_hour")
     )
 
-    print("✅ Weather data successfully flattened and station_id extracted from filenames.")
+    print("✅ Weather data successfully flattened and ingestion info added.")
 
 except Exception as e:
     print(f"⚠️ Weather flattening failed: {e}")
     wx_flat = wx_df
 
 
-# 7. Join OpenAQ and Weather datasets on station_id
+# 7. Join OpenAQ and Weather datasets on station_id + ingestion info
 try:
     final_df = (
-        openaq_enriched.join(wx_flat, on="station_id", how="left")
+        openaq_enriched.join(
+            wx_flat,
+            on=["station_id", "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"],
+            how="left"
+        )
     )
-    print("✅ Successfully joined OpenAQ and Weather data.")
+
+    # Drop duplicated columns from wx_flat side if any
+    join_keys = ["station_id", "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"]
+
+    final_df = (
+        openaq_enriched
+        .join(wx_flat, on=join_keys, how="left")
+        .select(*openaq_enriched.columns, *[c for c in wx_flat.columns if c not in join_keys])
+    )
+
+    print("✅ Successfully joined OpenAQ and Weather data on station_id + ingestion year/month/day/hour.")
 except Exception as e:
     print(f"⚠️ Failed to join AQ and Weather data: {e}")
     final_df = openaq_enriched
 
 
-# 8. Derive year, month, day, hour from weather_timestamp for partitioning
-final_df = (
-    final_df
-    .withColumn("year", year(from_unixtime(col("weather_timestamp"))))
-    .withColumn("month", month(from_unixtime(col("weather_timestamp"))))
-    .withColumn("day", dayofmonth(from_unixtime(col("weather_timestamp"))))
-    .withColumn("hour", hour(from_unixtime(col("weather_timestamp"))))
-)
-
-
-# 9 Enforce consistent column data types for Parquet schema
+# 8 Enforce consistent column data types for Parquet schema
 try:
     print("Enforcing consistent data types before writing to Parquet...")
 
@@ -195,11 +207,13 @@ except Exception as e:
     print(f"⚠️ Failed to standardize data types: {e}")
 
 
-# 10. Write unified dataset to S3 as Parquet (partitioned)
+# 9. Write unified dataset to S3 as Parquet (partitioned by ingestion date/time)
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")
-    spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic") 
-    final_df.write.mode("overwrite").partitionBy("station_id", "year", "month", "day", "hour").parquet(STAGING_PATH)
+    spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
+    final_df.write.mode("overwrite").partitionBy(
+        "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"
+    ).parquet(STAGING_PATH)
 
     print("✅ Transformation complete — data successfully written to S3.")
 except Exception as e:

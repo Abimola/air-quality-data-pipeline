@@ -13,8 +13,8 @@ select
         else 'active'
     end as sensor_status,
     -- Latitude and longitude rounded to 4 decimal places
-    cast(round(latitude::numeric, 4) as double precision) as latitude,
-    cast(round(longitude::numeric, 4) as double precision) as longitude,
+    cast(round((temperature::numeric - 273.15), 2) as double precision) as temperature,
+    cast(round((feels_like::numeric - 273.15), 2) as double precision) as apparent_temperature,
     station_name,
     parameter_name,
     units,

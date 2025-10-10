@@ -44,3 +44,4 @@ with DAG(
     )
 
     run_dbt >> test_dbt
+

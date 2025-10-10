@@ -3,8 +3,9 @@
 select
     ba.station_id,
     ba.sensor_id,
-    ba.parameter_measurement_time,
     ba.parameter_value,
+    ba.parameter_measurement_time,
+    ba.sensor_status,
     ba.temperature,
     ba.apparent_temperature,
     ba.humidity,

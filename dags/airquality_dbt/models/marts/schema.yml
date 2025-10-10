@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: dim_station
+    description: "Dimension table for air quality monitoring stations."
+    columns:
+      - name: station_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_sensor
+    description: "Dimension table for sensor metadata (PM2.5, O3, NO2, etc.)."
+    columns:
+      - name: sensor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_air_quality
+    description: "Fact table combining air quality and weather metrics per hour per station."
+    columns:
+      - name: station_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_station')
+              field: station_id
+      - name: sensor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_sensor')
+              field: sensor_id
+      - name: measurement_time
+        tests:
+          - not_null

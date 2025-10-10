@@ -7,6 +7,7 @@ Description:
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator, get_current_context
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from datetime import datetime, timedelta
 import awswrangler as wr
 import pandas as pd
@@ -34,9 +35,7 @@ TARGET_TABLE = "stg_air_quality"
 STAGING_PATH = f"s3://{bucket}/staging/air_quality/"
 
 default_args = {
-    "owner": "airflow",
-    "retries": 1,
-    "retry_delay": timedelta(minutes=1),
+    "owner": "airflow"
 }
 
 # -------------------------------------------------------------------------
@@ -113,3 +112,13 @@ with DAG(
         python_callable=load_staging_to_postgres,
         provide_context=True,
     )
+
+    trigger_dbt = TriggerDagRunOperator(
+        task_id="trigger_dbt_models",
+        trigger_dag_id="run_dbt_models",  
+        wait_for_completion=False,        
+    )
+
+    load_task >> trigger_dbt
+
+

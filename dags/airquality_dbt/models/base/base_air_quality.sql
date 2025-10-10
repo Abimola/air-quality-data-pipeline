@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    unique_key=['station_id', 'sensor_id', 'weather_timestamp']
+) }}
 
 select
     station_id,
@@ -33,3 +36,8 @@ select
     day::int as day,
     hour::int as hour
 from {{ source('airquality_dwh', 'stg_air_quality') }}
+
+{% if is_incremental() %}
+  where weather_timestamp > (select max(weather_timestamp) from {{ this }})
+{% endif %}
+

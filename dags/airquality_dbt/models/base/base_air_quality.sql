@@ -13,15 +13,15 @@ select
         else 'active'
     end as sensor_status,
     -- Latitude and longitude rounded to 4 decimal places
-    cast(round((temperature::numeric - 273.15), 2) as double precision) as temperature,
-    cast(round((feels_like::numeric - 273.15), 2) as double precision) as apparent_temperature,
+    cast(round(latitude::numeric, 4) as double precision) as latitude,
+    cast(round(longitude::numeric, 4) as double precision) as longitude,
     station_name,
     parameter_name,
     units,
     display_name,
-    -- Convert temperature values from Kelvin to Celsius
-    (temperature::double precision - 273.15) as temperature,
-    (feels_like::double precision - 273.15) as apparent_temperature,
+    -- Convert temperature values from Kelvin to Celsius and 4 decimal places
+    cast(round((temperature::numeric - 273.15), 2) as double precision) as temperature,
+    cast(round((feels_like::numeric - 273.15), 2) as double precision) as apparent_temperature,
     humidity::double precision as humidity,
     pressure::double precision as pressure,
     dew_point::double precision as dew_point,

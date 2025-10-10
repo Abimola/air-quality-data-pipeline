@@ -36,7 +36,7 @@ STAGING_PATH = f"s3://{bucket}/staging/air_quality/"
 default_args = {
     "owner": "airflow",
     "retries": 1,
-    "retry_delay": timedelta(minutes=2),
+    "retry_delay": timedelta(minutes=1),
 }
 
 # -------------------------------------------------------------------------
@@ -53,8 +53,14 @@ def load_staging_to_postgres(**context):
         print(f"Loading specific partition: {s3_path}")
         df = wr.s3.read_parquet(path=s3_path)
     else:
-        print(f"Loading all staging data from {STAGING_PATH}")
-        df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
+        # print(f"Loading all staging data from {STAGING_PATH}")
+        # df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
+        s3_path = f"{STAGING_PATH}year=2025/month=10/day=09/hour=20/"
+        print(f"Loading specific partition: {s3_path}")
+        df = wr.s3.read_parquet(path=s3_path)
+
+
+
 
     if df.empty:
         print("⚠️ No data found — nothing to load.")

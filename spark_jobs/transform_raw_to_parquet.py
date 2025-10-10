@@ -79,10 +79,10 @@ try:
         col("results.datetime.utc").alias("measurement_time"),
         col("results.coordinates.latitude").alias("latitude"),
         col("results.coordinates.longitude").alias("longitude"),
-        regexp_extract(input_file_name(), r"/openaq/(\d{4})/", 1).alias("ingestion_year"),
-        regexp_extract(input_file_name(), r"/openaq/\d{4}/(\d{2})/", 1).alias("ingestion_month"),
-        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/(\d{2})/", 1).alias("ingestion_day"),
-        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("ingestion_hour")
+        regexp_extract(input_file_name(), r"/openaq/(\d{4})/", 1).alias("year"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/(\d{2})/", 1).alias("month"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/(\d{2})/", 1).alias("day"),
+        regexp_extract(input_file_name(), r"/openaq/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("hour")
     )
 
     sensors_flat = stations_df.withColumn("sensors", explode("sensors")).select(
@@ -118,10 +118,10 @@ try:
         col("current.wind_gust").alias("wind_gust"),
         col("current.dt").alias("weather_timestamp"),
         regexp_extract(input_file_name(), r"(\d+)\.json$", 1).alias("station_id"),
-        regexp_extract(input_file_name(), r"/weather/(\d{4})/", 1).alias("ingestion_year"),
-        regexp_extract(input_file_name(), r"/weather/\d{4}/(\d{2})/", 1).alias("ingestion_month"),
-        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/(\d{2})/", 1).alias("ingestion_day"),
-        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("ingestion_hour")
+        regexp_extract(input_file_name(), r"/weather/(\d{4})/", 1).alias("year"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/(\d{2})/", 1).alias("month"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/(\d{2})/", 1).alias("day"),
+        regexp_extract(input_file_name(), r"/weather/\d{4}/\d{2}/\d{2}/(\d{2})/", 1).alias("hour")
     )
 
     print("✅ Weather data successfully flattened and ingestion info added.")
@@ -133,16 +133,7 @@ except Exception as e:
 
 # 7. Join OpenAQ and Weather datasets on station_id + ingestion info
 try:
-    final_df = (
-        openaq_enriched.join(
-            wx_flat,
-            on=["station_id", "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"],
-            how="left"
-        )
-    )
-
-    # Drop duplicated columns from wx_flat side if any
-    join_keys = ["station_id", "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"]
+    join_keys = ["station_id", "year", "month", "day", "hour"]
 
     final_df = (
         openaq_enriched
@@ -150,7 +141,7 @@ try:
         .select(*openaq_enriched.columns, *[c for c in wx_flat.columns if c not in join_keys])
     )
 
-    print("✅ Successfully joined OpenAQ and Weather data on station_id + ingestion year/month/day/hour.")
+    print("✅ Successfully joined OpenAQ and Weather data on station_id + year/month/day/hour.")
 except Exception as e:
     print(f"⚠️ Failed to join AQ and Weather data: {e}")
     final_df = openaq_enriched
@@ -211,9 +202,7 @@ except Exception as e:
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")
     spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
-    final_df.write.mode("overwrite").partitionBy(
-        "ingestion_year", "ingestion_month", "ingestion_day", "ingestion_hour"
-    ).parquet(STAGING_PATH)
+    final_df.write.mode("overwrite").partitionBy("year", "month", "day", "hour").parquet(STAGING_PATH)
 
     print("✅ Transformation complete — data successfully written to S3.")
 except Exception as e:

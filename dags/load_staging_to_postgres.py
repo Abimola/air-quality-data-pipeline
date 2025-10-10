@@ -53,8 +53,8 @@ def load_staging_to_postgres(**context):
         print(f"Loading specific partition: {s3_path}")
         df = wr.s3.read_parquet(path=s3_path)
     else:
-        # print(f"Loading all staging data from {STAGING_PATH}")
-        # df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
+        print(f"Loading all staging data from {STAGING_PATH}")
+        df = wr.s3.read_parquet(path=STAGING_PATH, dataset=True)
 
     if df.empty:
         print("⚠️ No data found — nothing to load.")

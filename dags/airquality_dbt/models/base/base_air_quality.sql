@@ -7,18 +7,30 @@ select
     station_id,
     sensor_id,
     value::double precision as parameter_value,
+
+    -- Categorise sensor
     measurement_time::timestamp as parameter_measurement_time,
     case
         when measurement_time < weather_timestamp - interval '1 day' then 'inactive'
         else 'active'
     end as sensor_status,
+
     -- Latitude and longitude rounded to 4 decimal places
     cast(round(latitude::numeric, 4) as double precision) as latitude,
     cast(round(longitude::numeric, 4) as double precision) as longitude,
     station_name,
     parameter_name,
-    units,
     display_name,
+    units,
+
+    -- Categorize parameter
+    case
+        when parameter_name in ('pm1','pm10','pm25','no2','so2','nox','no','o3') then 'pollutant'
+        when parameter_name in ('temperature','relativehumidity') then 'weather'
+        when parameter_name in ('um003') then 'particle_count'
+        else 'other'
+    end as parameter_category,
+
     -- Convert temperature values from Kelvin to Celsius and 4 decimal places
     cast(round((temperature::numeric - 273.15), 2) as double precision) as temperature,
     cast(round((feels_like::numeric - 273.15), 2) as double precision) as apparent_temperature,

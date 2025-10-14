@@ -25,7 +25,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 | Stage | Tools | Description |
 |--------|--------|-------------|
 | **Ingestion** | *Apache Airflow, AWS S3* | Airflow DAGs fetch air quality data from **OpenAQ API** and weather data from **OpenWeather API**, storing hourly JSON dumps in Amazon S3. |
-| **Transformation** | *Apache Spark (AWS EMR)* | Spark jobs running on Amazon EMR transform raw JSON into structured Parquet files, standardizing schema and timestamps. |
+| **Transformation** | *Apache Spark (AWS EMR)* | Spark jobs running on Amazon EMR transform raw JSON data into structured Parquet files, standardizing the schema. |
 | **Loading & Modelling** | *PostgreSQL, dbt* | Clean Parquet data is loaded into a PostgreSQL warehouse, where dbt performs modular transformations and builds a **star schema** (Fact + Dimensions). |
 | **Analytics & Visualization** | *Metabase* | Interactive dashboards present insights on air quality, weather correlations, and station health metrics. |
 | **Orchestration & Deployment** | *Apache Airflow, Docker, AWS EC2* | Airflow coordinates all DAGs (Ingest → Transform → Load → Model), containerized within Docker on an AWS EC2 instance. |

@@ -13,7 +13,7 @@ It showcases an industry-ready stack integrating **AWS, Airflow, Spark, dbt, Pos
 
 ## 🧱 Architecture Diagram
 
-![Data Pipeline](./Data%20Pipeline.png)
+![Data Pipeline](./assets/data_pipeline.png)
 
 > *Logos are trademarks of their respective owners and are used here for illustrative purposes only.  
 This project is for educational and portfolio demonstration purposes and is not affiliated with or endorsed by any of the mentioned entities.*
@@ -34,7 +34,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 
 ## 🧩 Data Model
 
-![Star Schema](./star%20schema.png)
+![Star Schema](./assets/star_schema.png)
 
 **Schema:**
 - **fact_air_quality** — core hourly measurements combining pollutants and weather data  
@@ -59,7 +59,7 @@ They update automatically as new data is ingested through the pipeline.
 - Pollutant concentration tiles (PM2.5, NO₂, O₃)  
 - Time-series pollutant trends  
 
-![Weather and Air Quality Dashboard](./Weather%20and%20Air%20Quality%20Dashboard.png)
+![Weather and Air Quality Dashboard](./assets/weather_air_quality_dashboard.png)
 
 ---
 
@@ -69,7 +69,7 @@ They update automatically as new data is ingested through the pipeline.
 - Bar charts for PM1, PM2.5, PM10, NO₂, O₃  
 - Identify the most polluted regions  
 
-![Air Quality - Last 24 hours](./Air%20Quality%20-%20Last%2024%20hours.png)
+![Air Quality - Last 24 hours](./assets/air_quality_24h.png)
 
 ---
 
@@ -78,7 +78,7 @@ They update automatically as new data is ingested through the pipeline.
 **Key Visuals:**  
 - Scatter plots comparing PM2.5 and NO₂ against Temperature, Humidity, Pressure, and Wind Speed  
 
-![Air Quality vs Weather (Per Station)](./Air%20Quality%20vs%20Weather%20(Per%20Station).png)
+![Air Quality vs Weather (Per Station)](./assets/air_quality_vs_weather.png)
 
 ---
 
@@ -89,7 +89,7 @@ They update automatically as new data is ingested through the pipeline.
 - Active/inactive sensor counts per station  
 - Pollutant coverage health bars  
 
-![Station Health and Ingestion Summary](./Station%20Health%20and%20Ingestion%20Summary.png)
+![Station Health and Ingestion Summary](./assets/station_health_summary.png)
 
 ---
 
@@ -116,12 +116,8 @@ They update automatically as new data is ingested through the pipeline.
   - **AirGradient** under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/),
   - **Clarity** under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.ca),
   - **EEA** under [ODC-BY 1.0](https://opendatacommons.org/licenses/by/1-0/).  
-- **Weather data** provided by [OpenWeatherMap](https://openweathermap.org/) under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).  
+- **Weather data** provided by [OpenWeather](https://openweathermap.org/) under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).  
 - **Pipeline processing** performed via *Airflow → EMR → PostgreSQL → dbt → Metabase*.
-
-> Weather data provided by OpenWeather  
-> [https://openweathermap.org](https://openweathermap.org)  
-> © OpenWeather — [CC BY-SA 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/)
 
 ---
 

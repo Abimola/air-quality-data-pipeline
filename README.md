@@ -139,6 +139,7 @@ They update automatically as new data is ingested through the pipeline.
 ---
 
 ## Outcome
+## **Outcome**
 
 - Fully functional data pipeline running on AWS  
 - Automated hourly data refresh from APIs  

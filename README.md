@@ -142,6 +142,6 @@ They update automatically as new data is ingested through the pipeline.
 ---
 
 **Author:** [Abimola Onibi]  
-[LinkedIn](#) | [GitHub](#)*
+[LinkedIn](https://www.linkedin.com/in/abimola-onibi/) | [GitHub](https://github.com/Abimola/)*
 
 ---

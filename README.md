@@ -1,4 +1,4 @@
-# 🌍 End-to-End Air Quality & Weather Data Pipeline  
+# End-to-End Air Quality & Weather Data Pipeline  
 **(AWS + Airflow + Spark (EMR) + PostgreSQL + dbt + Metabase + Docker)**
 
 ---
@@ -50,7 +50,6 @@ This design supports flexible queries for station-level and pollutant-level anal
 All dashboards were built in **Metabase**, connected directly to the PostgreSQL data mart.  
 They update automatically as new data is ingested through the pipeline.
 
----
 
 ### 1️. Weather & Air Quality Dashboard
 **Purpose:** Display live weather and pollutant levels for a selected station, refreshed hourly.  
@@ -61,8 +60,6 @@ They update automatically as new data is ingested through the pipeline.
 
 ![Weather and Air Quality Dashboard](./assets/weather_air_quality_dashboard.png)
 
----
-
 ### 2. Air Quality — Last 24 Hours
 **Purpose:** Compare average pollutant concentrations across stations for the past 24 hours.  
 **Key Visuals:**  
@@ -71,7 +68,6 @@ They update automatically as new data is ingested through the pipeline.
 
 ![Air Quality - Last 24 hours](./assets/air_quality_24h.png)
 
----
 
 ### 3. Air Quality vs Weather (Per Station)
 **Purpose:** Explore how environmental factors influence pollutant levels.  
@@ -79,8 +75,6 @@ They update automatically as new data is ingested through the pipeline.
 - Scatter plots comparing PM2.5 and NO₂ against Temperature, Humidity, Pressure, and Wind Speed  
 
 ![Air Quality vs Weather (Per Station)](./assets/air_quality_vs_weather.png)
-
----
 
 ### 4. Station Health & Ingestion Summary
 **Purpose:** Track data freshness, ingestion delays, and active sensor availability.  
@@ -147,7 +141,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-**Author:** [Your Name]  
-📫 *Connect with me on [LinkedIn](#) | [GitHub](#)*
+**Author:** [Abimola Onibi]  
+[LinkedIn](#) | [GitHub](#)*
 
 ---

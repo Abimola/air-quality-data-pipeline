@@ -13,7 +13,7 @@ It showcases an industry-ready stack integrating **AWS, Airflow, Spark, dbt, Pos
 
 ## 🧱 Architecture Diagram
 
-![Data Pipeline](./assets/data_pipeline.png)
+![Data Pipeline](./assets/air_quality_data_pipeline.png)
 
 > *Logos are trademarks of their respective owners and are used here for illustrative purposes only.  
 This project is for educational and portfolio demonstration purposes and is not affiliated with or endorsed by any of the mentioned entities.*

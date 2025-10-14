@@ -3,7 +3,7 @@
 
 ---
 
-## 🧭 Overview
+## Overview
 
 This project demonstrates a fully automated **modern data engineering pipeline** that collects, processes, models, and visualizes real-time air quality and weather data for monitoring environmental health across stations in the United Kingdom.
 
@@ -11,7 +11,7 @@ It showcases an industry-ready stack integrating **AWS, Airflow, Spark, dbt, Pos
 
 ---
 
-## 🧱 Architecture Diagram
+## Architecture Diagram
 
 ![Data Pipeline](./assets/air_quality_data_pipeline.png)
 
@@ -20,7 +20,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 
 ---
 
-## ⚙️ Pipeline Overview
+## Pipeline Overview
 
 | Stage | Tools | Description |
 |--------|--------|-------------|
@@ -32,7 +32,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 
 ---
 
-## 🧩 Data Model
+## Data Model
 
 ![Star Schema](./assets/star_schema.png)
 
@@ -45,14 +45,14 @@ This design supports flexible queries for station-level and pollutant-level anal
 
 ---
 
-## 📊 Dashboards
+## Dashboards
 
 All dashboards were built in **Metabase**, connected directly to the PostgreSQL data mart.  
 They update automatically as new data is ingested through the pipeline.
 
 ---
 
-### 1️⃣ Weather & Air Quality Dashboard
+### 1️. Weather & Air Quality Dashboard
 **Purpose:** Display live weather and pollutant levels for a selected station, refreshed hourly.  
 **Key Visuals:**  
 - Temperature, Humidity, Wind Speed cards  
@@ -63,7 +63,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-### 2️⃣ Air Quality — Last 24 Hours
+### 2. Air Quality — Last 24 Hours
 **Purpose:** Compare average pollutant concentrations across stations for the past 24 hours.  
 **Key Visuals:**  
 - Bar charts for PM1, PM2.5, PM10, NO₂, O₃  
@@ -73,7 +73,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-### 3️⃣ Air Quality vs Weather (Per Station)
+### 3. Air Quality vs Weather (Per Station)
 **Purpose:** Explore how environmental factors influence pollutant levels.  
 **Key Visuals:**  
 - Scatter plots comparing PM2.5 and NO₂ against Temperature, Humidity, Pressure, and Wind Speed  
@@ -82,7 +82,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-### 4️⃣ Station Health & Ingestion Summary
+### 4. Station Health & Ingestion Summary
 **Purpose:** Track data freshness, ingestion delays, and active sensor availability.  
 **Key Visuals:**  
 - Station uptime and delay table  
@@ -93,7 +93,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-## 🧰 Technologies Used
+## Technologies Used
 
 | Category | Tools |
 |-----------|-------|
@@ -108,7 +108,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-## 📜 Data Licensing & Attribution
+## Data Licensing & Attribution
 
 - **Air quality data** sourced from [OpenAQ](https://openaq.org).  
   Providers include:
@@ -121,7 +121,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-## 🚀 Deployment Notes
+## Deployment Notes
 
 - All services (Airflow, PostgreSQL, Metabase) run as **Docker containers** on an AWS EC2 instance.  
 - Airflow DAGs are scheduled hourly to automate ingestion, transformation, and dbt model refreshes.  
@@ -129,7 +129,7 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-## 🧠 Key Learnings
+## Key Learnings
 
 - Building and orchestrating an end-to-end ELT data pipeline in the cloud  
 - Using **dbt** for modular SQL transformations and incremental updates  
@@ -138,12 +138,12 @@ They update automatically as new data is ingested through the pipeline.
 
 ---
 
-## 🎯 Outcome
+## Outcome
 
-✅ Fully functional data pipeline running on AWS  
-✅ Automated hourly data refresh from APIs  
-✅ Interactive dashboards for environmental insights  
-✅ Production-style workflow using modern DE tools  
+- Fully functional data pipeline running on AWS  
+- Automated hourly data refresh from APIs  
+- Interactive dashboards for environmental insights  
+- Production-style workflow using modern DE tools  
 
 ---
 

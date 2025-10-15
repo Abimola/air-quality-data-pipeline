@@ -18,8 +18,7 @@ import os
 
 
 # Configuration
-ssm = boto3.client("ssm", region_name="eu-north-1")
-bucket = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")["Parameter"]["Value"]
+BUCKET = os.getenv("S3_BUCKET_NAME")
 
 # Load database credentials securely from environment variables
 PG_HOST = "postgres"

@@ -29,6 +29,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 | **Loading & Modelling** | *PostgreSQL, dbt* | Clean Parquet data is loaded into a PostgreSQL warehouse, where dbt performs modular transformations and builds a **star schema** (Fact + Dimensions). |
 | **Analytics & Visualization** | *Metabase* | Interactive dashboards present insights on air quality, weather correlations, and station health metrics. |
 | **Orchestration & Deployment** | *Apache Airflow, Docker, AWS EC2* | Airflow coordinates all DAGs (Ingest → Transform → Load → Model), containerized within Docker on an AWS EC2 instance. |
+| **CI/CD Automation** | *GitHub Actions, AWS S3* | Automates deployment of Spark transformation scripts to S3 on every push to `main`, ensuring EMR always executes the latest version of the job. |
 
 ---
 

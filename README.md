@@ -1,4 +1,4 @@
-# End-to-End Air Quality & Weather Data Pipeline  
+# End-to-End Air Quality and Weather Data Pipeline  
 **(AWS + Airflow + Spark (EMR) + PostgreSQL + dbt + Metabase + Docker)**
 
 ---

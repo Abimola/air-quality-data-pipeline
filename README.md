@@ -31,8 +31,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 | **Orchestration & Deployment** | *Apache Airflow, Docker, AWS EC2* | Airflow coordinates all DAGs (Ingest → Transform → Load → Model), containerized within Docker on an AWS EC2 instance. |
 | **CI/CD Automation** | *GitHub Actions, AWS S3* | Automates deployment of Spark transformation scripts to S3 on every push to `main`, ensuring EMR always executes the latest version of the job. |
 
-> *CI/CD automation powered by [GitHub Actions](https://github.com/features/actions),  
-> using the open-source [S3 Sync Action by Jake Jarvis](https://github.com/jakejarvis/s3-sync-action).
+> CI/CD automation powered by [GitHub Actions](https://github.com/features/actions), using the open-source [S3 Sync Action by Jake Jarvis](https://github.com/jakejarvis/s3-sync-action).
 
 ---
 

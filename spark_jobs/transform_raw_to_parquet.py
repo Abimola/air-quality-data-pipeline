@@ -190,7 +190,7 @@ try:
     if missing_columns:
         print(f"✅ Skipped missing columns (not found in DataFrame): {', '.join(missing_columns)}")
 
-    # Optional: Verify final schema
+    # Verify final schema
     print("\n Final DataFrame Schema:")
     final_df.printSchema()
 

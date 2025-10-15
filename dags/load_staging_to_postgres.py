@@ -16,9 +16,8 @@ import boto3
 import pg8000
 import os
 
-# -------------------------------------------------------------------------
+
 # Configuration
-# -------------------------------------------------------------------------
 ssm = boto3.client("ssm", region_name="eu-north-1")
 bucket = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")["Parameter"]["Value"]
 
@@ -38,9 +37,7 @@ default_args = {
     "owner": "airflow"
 }
 
-# -------------------------------------------------------------------------
 # Function: Load Parquet from S3 → Postgres
-# -------------------------------------------------------------------------
 def load_staging_to_postgres(**context):
     context = get_current_context()
     run_hour = context["dag_run"].conf.get("run_hour", None)
@@ -98,9 +95,7 @@ def load_staging_to_postgres(**context):
     print(f"✅ Loaded {len(df)} rows into {TARGET_SCHEMA}.{TARGET_TABLE}")
 
 
-# -------------------------------------------------------------------------
 # DAG definition
-# -------------------------------------------------------------------------
 with DAG(
     dag_id="load_staging_to_postgres",
     description="Load S3 Parquet (staging) into Postgres",

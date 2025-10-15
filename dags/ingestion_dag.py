@@ -1,3 +1,16 @@
+"""
+DAG: api_ingestion
+Description:
+    Fetch air quality and weather data from external APIs (OpenAQ and OpenWeather)
+    for configured stations. The data is stored as raw JSON files in S3 
+    for each station and hour.
+
+    This DAG runs hourly, retrieves data for each station, saves the results
+    to the appropriate S3 prefix, and then triggers the downstream 
+    EMR transformation DAG.
+"""
+
+
 import os
 import json
 import boto3

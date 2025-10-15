@@ -23,7 +23,7 @@ select
     display_name,
     units,
 
-    -- Categorize parameter
+    -- Categorise parameter
     case
         when parameter_name in ('pm1','pm10','pm25','no2','so2','nox','no','o3') then 'pollutant'
         when parameter_name in ('temperature','relativehumidity') then 'weather'

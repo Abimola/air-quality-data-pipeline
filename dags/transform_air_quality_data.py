@@ -17,22 +17,15 @@ from datetime import datetime
 import boto3
 
 
-# -------------------------------------------------------------------------
 # Retrieve secure configuration from AWS Systems Manager Parameter Store
-# -------------------------------------------------------------------------
 ssm = boto3.client("ssm", region_name="eu-north-1")
 
 app_id = ssm.get_parameter(Name="/airquality/config/emr-app-id")["Parameter"]["Value"]
 role_arn = ssm.get_parameter(Name="/airquality/config/emr-role-arn")["Parameter"]["Value"]
 bucket = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")["Parameter"]["Value"]
 
-# -------------------------------------------------------------------------
-# DAG CONFIGURATION
-# -------------------------------------------------------------------------
-# This DAG has no schedule — it runs only when triggered by api_ingestion.
-# It starts an EMR Serverless Spark job and writes logs + output to S3.
-# -------------------------------------------------------------------------
 
+# DAG CONFIGURATION
 def start_emr_job(**kwargs):
     """Dynamically retrieves runtime parameters and triggers EMR Serverless Spark job."""
     context = get_current_context()
@@ -84,9 +77,7 @@ def start_emr_job(**kwargs):
     return emr_task.execute(context=context)
 
 
-# -------------------------------------------------------------------------
 # DAG DEFINITION
-# -------------------------------------------------------------------------
 with DAG(
     dag_id="transform_air_quality_data",
     description="Run EMR Serverless Spark job for air quality data transformation",

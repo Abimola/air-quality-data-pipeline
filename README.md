@@ -39,7 +39,7 @@ This project is for educational and portfolio demonstration purposes and is not 
 **Schema:**
 - **fact_air_quality** — core hourly measurements combining pollutants and weather data  
 - **dim_station** — station metadata (name, coordinates, etc.)  
-- **dim_sensor** — pollutant and sensor definitions (PM2.5, NO₂, RH, Temperature…)
+- **dim_sensor** — pollutant and sensor definitions (PM2.5, NO₂, etc.)
 
 This design supports flexible queries for station-level and pollutant-level analytics.
 

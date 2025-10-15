@@ -15,9 +15,8 @@ OWM_API_KEY = os.getenv("OWM_API_KEY")
 
 
 
-
+# Fetch the latest AQ reading for a given station.
 def fetch_openaq_latest(loc_id):
-    """Fetch the latest AQ reading for a given station."""
     url = f"https://api.openaq.org/v3/locations/{loc_id}/latest"
     headers = {"X-API-Key": OPENAQ_API_KEY}
     r = requests.get(url, headers=headers)
@@ -25,8 +24,8 @@ def fetch_openaq_latest(loc_id):
     return r.json()
 
 
+# Fetch current weather at the station's location.
 def fetch_weather(lat, lon):
-    """Fetch current weather at the station's location (raw API response)."""
     url = "https://api.openweathermap.org/data/3.0/onecall"
     params = {
         "lat": lat,
@@ -38,9 +37,8 @@ def fetch_weather(lat, lon):
     r.raise_for_status()
     return r.json()
 
-
+# Save JSON data to S3 in timestamped folders.
 def save_to_s3(data, prefix, station_id):
-    """Save JSON data to S3 in timestamped folders."""
     s3 = boto3.client("s3", region_name=REGION)
     now = datetime.utcnow()
     key = f"raw/{prefix}/{now.strftime('%Y/%m/%d/%H')}/{station_id}.json"

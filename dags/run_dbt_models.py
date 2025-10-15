@@ -14,10 +14,8 @@ default_args = {
     "depends_on_past": False
 }
 
-# -------------------------------------------------------------------------
-# DAG definition
-# -------------------------------------------------------------------------
 
+# DAG definition
 with DAG(
     dag_id="run_dbt_models",
     default_args=default_args,

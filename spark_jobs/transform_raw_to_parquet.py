@@ -9,7 +9,7 @@ from datetime import datetime
 import boto3
 
 
-# 1. Retrieve S3 bucket name securely from AWS Systems Manager Parameter Store
+# Retrieve S3 bucket name securely from AWS Systems Manager Parameter Store
 ssm = boto3.client("ssm", region_name="eu-north-1")
 param = ssm.get_parameter(Name="/airquality/config/s3-bucket-name")
 bucket = param["Parameter"]["Value"]
@@ -17,7 +17,7 @@ bucket = param["Parameter"]["Value"]
 print(f"✅ Using bucket: {bucket}")
 
 
-# 2. Initialize Spark session
+# Initialize Spark session
 spark = (
     SparkSession.builder
     .appName("TransformRawToParquet")
@@ -25,7 +25,7 @@ spark = (
 )
 
 
-# 3. Get the run_hour parameter from Airflow
+# Get the run_hour parameter from Airflow
 run_hour = spark.conf.get("spark.run_hour", None)
 if run_hour:
     run_dt = datetime.strptime(run_hour, "%Y%m%dT%H%M%S")
@@ -49,7 +49,7 @@ STATIONS_PATH = f"s3://{bucket}/config/stations_sample.json"
 STAGING_PATH = f"s3://{bucket}/staging/air_quality/"
 
 
-# 4. Read raw JSON data from S3 (filtered by hour if provided)
+# Read raw JSON data from S3 (filtered by hour if provided)
 print("Reading OpenAQ data from S3...")
 aq_df = (
     spark.read
@@ -70,7 +70,7 @@ print("Reading Stations metadata from S3...")
 stations_df = spark.read.option("multiLine", True).json(STATIONS_PATH)
 
 
-# 5. Flatten and enrich OpenAQ data
+# Flatten and enrich OpenAQ data
 try:
     aq_flat = aq_df.withColumn("results", explode("results")).select(
         col("results.locationsId").alias("station_id"),
@@ -103,7 +103,7 @@ except Exception as e:
     openaq_enriched = aq_df
 
 
-# 6. Flatten Weather data and extract station_id + ingestion info
+# Flatten Weather data and extract station_id + ingestion info
 try:
     wx_flat = wx_df.select(
         col("current.temp").alias("temperature"),
@@ -131,7 +131,7 @@ except Exception as e:
     wx_flat = wx_df
 
 
-# 7. Join OpenAQ and Weather datasets on station_id + ingestion info
+# Join OpenAQ and Weather datasets on station_id + ingestion info
 try:
     join_keys = ["station_id", "year", "month", "day", "hour"]
 
@@ -147,7 +147,7 @@ except Exception as e:
     final_df = openaq_enriched
 
 
-# 8 Enforce consistent column data types for Parquet schema
+# Enforce consistent column data types for Parquet schema
 try:
     print("Enforcing consistent data types before writing to Parquet...")
 
@@ -198,7 +198,7 @@ except Exception as e:
     print(f"⚠️ Failed to standardize data types: {e}")
 
 
-# 9. Write unified dataset to S3 as Parquet (partitioned by ingestion date/time)
+# Write unified dataset to S3 as Parquet (partitioned by ingestion date/time)
 try:
     print(f"Writing unified dataset to {STAGING_PATH} ...")
     spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")

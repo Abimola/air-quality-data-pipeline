@@ -30,7 +30,7 @@ PG_PASS = os.getenv("POSTGRES_PASSWORD")
 TARGET_SCHEMA = "airquality_dwh"
 TARGET_TABLE = "stg_air_quality"
 
-STAGING_PATH = f"s3://{bucket}/staging/air_quality/"
+STAGING_PATH = f"s3://{BUCKET}/staging/air_quality/"
 
 default_args = {
     "owner": "airflow"

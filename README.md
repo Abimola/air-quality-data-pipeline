@@ -205,18 +205,18 @@ Shows ingestion delays, active sensors, and data freshness.
 
 5. **Trigger the Airflow DAGs**
 
-  - Start with api_ingestion
-  - The remaining DAGs execute automatically in sequence
+    - Start with api_ingestion
+    - The remaining DAGs execute automatically in sequence
 
 6. **Access dashboards**
 
-  - **Airflow UI:** `http://<EC2_PUBLIC_IP>:8080`  
-  - **Metabase:** `http://<EC2_PUBLIC_IP>:3000`
+    - **Airflow UI:** `http://<EC2_PUBLIC_IP>:8080`  
+    - **Metabase:** `http://<EC2_PUBLIC_IP>:3000`
 
-  If you are testing locally (for example using Docker Desktop), you can still use:
+    If you are testing locally (for example using Docker Desktop), you can still use:
 
-  - **Airflow UI:** `http://localhost:8080`
-  - **Metabase:** `http://localhost:3000`
+    - **Airflow UI:** `http://localhost:8080`
+    - **Metabase:** `http://localhost:3000`
 
 ---
 

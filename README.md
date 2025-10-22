@@ -7,7 +7,7 @@
 
 This project demonstrates an automated **end-to-end data engineering pipeline** that collects, processes, models, and visualizes real-time air quality and weather data for stations across the United Kingdom.
 
-It is designed to **mimic real-world enterprise data infrastructure** while remaining cost-efficient.  
+It is designed to **emulate real-world enterprise data infrastructure** while remaining cost-efficient.  
 Each technology was intentionally selected to reflect modern industry practices used in production data platforms.
 
 ---
@@ -62,7 +62,7 @@ Each component was chosen to balance **realism and cost control**.
 | Component | Purpose | Reason for Choice |
 |------------|----------|------------------|
 | **AWS S3** | Central data lake for raw and transformed data | Simulates production data zones (raw, staging, curated) |
-| **AWS EMR (Spark)** | Distributed transformation | Mimics big data environments while remaining cost-effective |
+| **AWS EMR (Spark)** | Distributed transformation | Emulates big data environments while remaining cost-effective |
 | **PostgreSQL** | Analytical warehouse | Lightweight substitute for Redshift or Snowflake |
 | **dbt** | Modular transformations and testing | Reflects modern ELT workflows |
 | **Airflow** | Scheduling and orchestration | Industry standard for DAG-based automation |

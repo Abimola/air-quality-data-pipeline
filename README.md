@@ -25,8 +25,11 @@ Each technology was intentionally selected to reflect modern industry practices 
 ## 3. Architecture Overview
 
 ![Architecture Diagram](./assets/air_quality_data_pipeline.png)
+> *Logos are trademarks of their respective owners and are used here for illustrative purposes only.  
+This project is for educational and portfolio demonstration purposes and is not affiliated with or endorsed by any of the mentioned entities.*
 
-**End-to-end flow**
+
+#### **End-to-end flow**
 
 1. **Ingestion:**  
    Airflow fetches hourly air quality data from **OpenAQ API** and weather data from **OpenWeather API**, saving the raw JSON files in Amazon S3.  
@@ -216,6 +219,8 @@ If you are testing locally (for example using Docker Desktop), you can still use
 - **Airflow UI:** [http://localhost:8080](http://localhost:8080)  
 - **Metabase:** [http://localhost:3000](http://localhost:3000)
 
+---
+
 
 ## 10. Cost Optimization Notes
 
@@ -230,9 +235,14 @@ This setup achieves **enterprise architecture realism** at very low monthly cost
 
 ## 11. Data Sources and Licensing
 
-- **Air quality data** from [OpenAQ](https://openaq.org) under open data licenses.  
-- **Weather data** from [OpenWeather](https://openweathermap.org) under CC BY-SA 4.0.  
-- All other processing, transformation, and visualization performed independently.
+- **Air quality data** sourced from [OpenAQ](https://openaq.org).  
+  Providers include:
+  - **DEFRA (UK)** under the [Open Government Licence v2.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/2/),
+  - **AirGradient** under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/),
+  - **Clarity** under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/deed.ca),
+  - **EEA** under [ODC-BY 1.0](https://opendatacommons.org/licenses/by/1-0/).  
+- **Weather data** provided by [OpenWeather](https://openweathermap.org/) under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).  
+- **Pipeline processing** performed via *Airflow → EMR → PostgreSQL → dbt → Metabase*.
 
 ---
 

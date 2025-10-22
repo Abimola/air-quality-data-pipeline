@@ -184,40 +184,39 @@ Shows ingestion delays, active sensors, and data freshness.
    git clone https://github.com/Abimola/air-quality-data-pipeline.git
    cd air-quality-data-pipeline
    ```
-2. Set environment variables
+2. **Set environment variables**
     ```
     cp .env.example .env
 
     ```
     Update the file with your credentials and keys.
 
-3. Launch local services
+3. **Launch local services**
     ```
     docker-compose up -d
     ```
 
     This starts Airflow, PostgreSQL, and Metabase containers.
 
-4. Upload sample stations to S3
+4. **Upload sample stations to S3**
     ```
     python scripts/generate_stations_sample.py
     ```
 
-5. Trigger the Airflow DAGs
+5. **Trigger the Airflow DAGs**
 
-- Start with api_ingestion
+  - Start with api_ingestion
+  - The remaining DAGs execute automatically in sequence
 
-- The remaining DAGs execute automatically in sequence
+6. **Access dashboards**
 
-6. Access dashboards
+  - **Airflow UI:** `http://<EC2_PUBLIC_IP>:8080`  
+  - **Metabase:** `http://<EC2_PUBLIC_IP>:3000`
 
-- **Airflow UI:** `http://<EC2_PUBLIC_IP>:8080`  
-- **Metabase:** `http://<EC2_PUBLIC_IP>:3000`
+  If you are testing locally (for example using Docker Desktop), you can still use:
 
-If you are testing locally (for example using Docker Desktop), you can still use:
-
-- **Airflow UI:** [http://localhost:8080](http://localhost:8080)  
-- **Metabase:** [http://localhost:3000](http://localhost:3000)
+  - **Airflow UI:** [http://localhost:8080](http://localhost:8080)  
+  - **Metabase:** [http://localhost:3000](http://localhost:3000)
 
 ---
 

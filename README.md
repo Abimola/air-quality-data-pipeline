@@ -74,35 +74,44 @@ This design encourages modularity, testing, and observability at each stage whil
 
 ## 5. Repository Structure
 
+
+```
 air-quality-data-pipeline/
 │
-├── dags/
-│ ├── ingestion_dag.py # Fetches API data and triggers EMR job
-│ ├── transform_air_quality_data.py # Launches EMR Spark transformation
-│ ├── load_staging_to_postgres.py # Loads Parquet from S3 to PostgreSQL
-│ └── run_dbt_models.py # Executes dbt models and tests
+├── .github/
+│ └── workflows/
+│ └── deploy-to-s3.yml   # CI/CD workflow deploying Spark jobs to S3
 │
-├── spark_jobs/
-│ └── transform_raw_to_parquet.py # Spark job for data flattening and enrichment
+├── dags/   # Airflow DAGs for orchestration and dbt project integration
+│ ├── airquality_dbt/   # Embedded dbt project inside Airflow
+│ │ └── models/
+│ │   ├── base/
+│ │   │ ├── base_air_quality.sql   # Base staging model
+│ │   │ └── schema.yml   # dbt model metadata and tests
+│ │   └── marts/   # Dimensional and fact models
+│ │     ├── dim_sensor.sql   # Sensor dimension
+│ │     ├── dim_station.sql   # Station dimension
+│ │     ├── fact_air_quality.sql   # Fact table combining air quality & weather
+│ │     └── schema.yml
+│ │
+│ ├── ingestion_dag.py   # DAG fetching data from OpenAQ/OpenWeather APIs
+│ ├── ingestion.py   # Python ingestion script for API calls and uploads to S3
+│ ├── load_staging_to_postgres.py  # Loads transformed data from S3 into PostgreSQL
+│ ├── run_dbt_models.py   # Executes dbt transformations and tests
+│ └── transform_air_quality_data.py   # Launches Spark (EMR) transformations
 │
-├── dbt/
-│ ├── models/
-│ │ ├── base_air_quality.sql
-│ │ ├── dim_station.sql
-│ │ ├── dim_sensor.sql
-│ │ └── fact_air_quality.sql
-│ └── schema.yml
+├── scripts/   # Utility and helper scripts
+│ └── generate_stations_sample.py   # Generates random UK monitoring stations sample
 │
-├── scripts/
-│ ├── ingestion.py # API calls and S3 upload
-│ ├── generate_stations_sample.py # Creates random UK station sample
-│ └── run_dbt_models.py # Helper for running dbt locally
+├── spark_jobs/   # Spark scripts for large-scale transformations
+│ └── transform_raw_to_parquet.py   # Cleans, flattens, and enriches raw JSON data
 │
-├── docker-compose.yml # Container orchestration
-├── .env.example # Environment variables template
-├── LICENSE
-└── README.md
-
+├── .env.example   # Environment variable configuration template
+├── .gitignore   # Files and directories to exclude from version control
+├── docker-compose.yml   # Docker setup for Airflow, PostgreSQL, and Metabase
+├── LICENSE   # License file
+└── README.md  # Project documentation
+```
 
 ---
 

@@ -215,8 +215,8 @@ Shows ingestion delays, active sensors, and data freshness.
 
   If you are testing locally (for example using Docker Desktop), you can still use:
 
-  - **Airflow UI:** [http://localhost:8080](http://localhost:8080)  
-  - **Metabase:** [http://localhost:3000](http://localhost:3000)
+  - **Airflow UI:** `http://localhost:8080`
+  - **Metabase:** `http://localhost:3000`
 
 ---
 

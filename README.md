@@ -83,37 +83,37 @@ air-quality-data-pipeline/
 │
 ├── .github/
 │ └── workflows/
-│ └── deploy-to-s3.yml   # CI/CD workflow deploying Spark jobs to S3
+│ └── deploy-to-s3.yml              # CI/CD workflow deploying Spark jobs to S3
 │
-├── dags/   # Airflow DAGs for orchestration and dbt project integration
-│ ├── airquality_dbt/   # Embedded dbt project inside Airflow
+├── dags/                           # Airflow DAGs 
+│ ├── airquality_dbt/               # Embedded dbt project inside Airflow
 │ │ └── models/
 │ │   ├── base/
-│ │   │ ├── base_air_quality.sql   # Base staging model
-│ │   │ └── schema.yml   # dbt model metadata and tests
-│ │   └── marts/   # Dimensional and fact models
-│ │     ├── dim_sensor.sql   # Sensor dimension
-│ │     ├── dim_station.sql   # Station dimension
-│ │     ├── fact_air_quality.sql   # Fact table combining air quality & weather
+│ │   │ ├── base_air_quality.sql    # Base staging model
+│ │   │ └── schema.yml              # dbt model metadata and tests
+│ │   └── marts/                    # Dimensional and fact models
+│ │     ├── dim_sensor.sql          # Sensor dimension
+│ │     ├── dim_station.sql         # Station dimension
+│ │     ├── fact_air_quality.sql    # Fact table combining air quality & weather
 │ │     └── schema.yml
 │ │
-│ ├── ingestion_dag.py   # DAG fetching data from OpenAQ/OpenWeather APIs
-│ ├── ingestion.py   # Python ingestion script for API calls and uploads to S3
-│ ├── load_staging_to_postgres.py  # Loads transformed data from S3 into PostgreSQL
-│ ├── run_dbt_models.py   # Executes dbt transformations and tests
-│ └── transform_air_quality_data.py   # Launches Spark (EMR) transformations
+│ ├── ingestion_dag.py              # DAG fetching data from OpenAQ/OpenWeather APIs
+│ ├── ingestion.py                  # Python ingestion script for API calls and uploads to S3
+│ ├── load_staging_to_postgres.py   # Loads transformed data from S3 into PostgreSQL
+│ ├── run_dbt_models.py             # Executes dbt transformations and tests
+│ └── transform_air_quality_data.py # Launches Spark (EMR) transformations
 │
-├── scripts/   # Utility and helper scripts
+├── scripts/                        # Utility and helper scripts
 │ └── generate_stations_sample.py   # Generates random UK monitoring stations sample
 │
-├── spark_jobs/   # Spark scripts for large-scale transformations
+├── spark_jobs/                     # Spark scripts for large-scale transformations
 │ └── transform_raw_to_parquet.py   # Cleans, flattens, and enriches raw JSON data
 │
-├── .env.example   # Environment variable configuration template
-├── .gitignore   # Files and directories to exclude from version control
-├── docker-compose.yml   # Docker setup for Airflow, PostgreSQL, and Metabase
-├── LICENSE   # License file
-└── README.md  # Project documentation
+├── .env.example                    # Environment variable configuration template
+├── .gitignore                      # Files and directories to exclude from version control
+├── docker-compose.yml              # Docker setup for Airflow, PostgreSQL, and Metabase
+├── LICENSE                         # License file
+└── README.md                       # Project documentation
 ```
 
 ---
